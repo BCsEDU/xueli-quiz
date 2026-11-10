@@ -1,10 +1,11 @@
-import { loadExams, teacherFetch, teacherDelete, mode } from "./store.js";
+import { loadExams, teacherFetch, teacherDelete, mode } from "./store.js?v=3";
 const $ = (id) => document.getElementById(id);
 const C = window.CONFIG;
 let exams = [], rows = [], pw = "";
 
 $("modeNote").textContent = mode === "local" ? "目前為本機模式（localStorage），資料只存在這台電腦。請設定 Supabase 以集中全班資料。" : "";
-$("ok").onclick = async () => {
+$("lf").onsubmit = async (ev) => {
+  ev.preventDefault();
   pw = $("pw").value;
   try {
     exams = await loadExams();
@@ -13,9 +14,6 @@ $("ok").onclick = async () => {
     $("main").classList.remove("hidden");
     init();
   } catch (e) { $("err").textContent = e.message; }
-};
-$("pw").onkeydown = (e) => {
-  if (e.key === "Enter") $("ok").click();
 };
 
 function init() {
