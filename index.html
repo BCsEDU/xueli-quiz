@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>學力檢測歷屆試題練習</title><link rel="stylesheet" href="css/style.css"></head>
 <body>
 <header><h1>📝 學力檢測歷屆試題練習</h1><a href="teacher.html">教師後台 →</a></header>
@@ -20,7 +20,16 @@
 </section>
 
 <section id="exam" class="hidden">
-  <div id="pages"></div>
+  <div id="left">
+    <div id="zoombar">
+      <button id="zout" class="sec" aria-label="縮小">－</button>
+      <span id="zval">100%</span>
+      <button id="zin" class="sec" aria-label="放大">＋</button>
+      <button id="zfit" class="sec">符合寬度</button>
+      <small>題目區可雙指縮放；右邊選項不會跟著放大</small>
+    </div>
+    <div id="pane"><div id="pages"></div></div>
+  </div>
   <aside id="sheet">
     <button id="back" class="sec" style="margin-bottom:10px">← 返回選單（答案會保留）</button>
     <div id="info" style="font-weight:600;margin-bottom:8px"></div>
@@ -30,6 +39,6 @@
     <button id="again" class="sec hidden" style="margin-top:12px">再測一次</button>
   </aside>
 </section>
-<script src="js/config.js?v=6"></script>
-<script type="module" src="js/student.js?v=6"></script>
+<script src="js/config.js?v=8"></script>
+<script type="module" src="js/student.js?v=8"></script>
 </body></html>

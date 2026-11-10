@@ -1,4 +1,4 @@
-import { loadExams, saveSubmission, mode } from "./store.js?v=6";
+import { loadExams, saveSubmission, mode } from "./store.js?v=8";
 const $ = (id) => document.getElementById(id);
 const C = window.CONFIG;
 const SYM = ["①", "②", "③", "④"];
@@ -96,3 +96,34 @@ async function submit() {
     console.error(e);
   }
 }
+
+
+// ---- 題目區獨立縮放（按鈕 + 雙指），不影響右側答案卡 ----
+const pane = $("pane"), pages = $("pages");
+let zoom = Math.min(3, Math.max(0.5, +localStorage.getItem("xueli_zoom") || 1));
+function setZoom(z, cx = pane.clientWidth / 2, cy = pane.clientHeight / 2) {
+  z = Math.min(3, Math.max(0.5, Math.round(z * 100) / 100));
+  const rx = (pane.scrollLeft + cx) / pane.scrollWidth, ry = (pane.scrollTop + cy) / pane.scrollHeight;
+  zoom = z;
+  pages.style.width = z * 100 + "%";
+  $("zval").textContent = Math.round(z * 100) + "%";
+  pane.scrollLeft = rx * pane.scrollWidth - cx;
+  pane.scrollTop = ry * pane.scrollHeight - cy;
+  localStorage.setItem("xueli_zoom", z);
+}
+$("zin").onclick = () => setZoom(zoom + 0.25);
+$("zout").onclick = () => setZoom(zoom - 0.25);
+$("zfit").onclick = () => setZoom(1);
+setZoom(zoom);
+const dist = (t) => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
+let p0 = 0, z0 = 1;
+pane.addEventListener("touchstart", (e) => { if (e.touches.length === 2) { p0 = dist(e.touches); z0 = zoom; } }, { passive: true });
+pane.addEventListener("touchmove", (e) => {
+  if (e.touches.length !== 2 || !p0) return;
+  e.preventDefault();
+  const r = pane.getBoundingClientRect();
+  setZoom(z0 * (dist(e.touches) / p0), (e.touches[0].clientX + e.touches[1].clientX) / 2 - r.left, (e.touches[0].clientY + e.touches[1].clientY) / 2 - r.top);
+}, { passive: false });
+pane.addEventListener("touchend", () => { p0 = 0; });
+// iOS Safari 會無視 user-scalable=no，另外擋整頁縮放手勢
+document.addEventListener("gesturestart", (e) => e.preventDefault());

@@ -50,6 +50,17 @@ with sync_playwright() as p:
         pg.click("#qs .q:nth-child(1) .o[data-k='1']")  # 送出後不可再改
         check(pg.evaluate("document.querySelectorAll('.sel').length") == 0, f"{e['id']} 送出後鎖定")
     pg.click("#again"); check(pg.locator("#start").is_visible(), "再測一次回首頁")
+    # 題目區獨立縮放
+    pg.goto(B); pg.wait_for_selector("#year option", state="attached"); pg.click("#go")
+    sw = lambda: pg.evaluate("(()=>{const r=document.getElementById('sheet').getBoundingClientRect();return [r.width,r.height]})()")
+    pw0 = pg.evaluate("document.getElementById('pages').getBoundingClientRect().width"); s0 = sw()
+    pg.click("#zin"); pg.click("#zin")
+    check(pg.inner_text("#zval") == "150%", "放大到 150%")
+    check(pg.evaluate("document.getElementById('pages').getBoundingClientRect().width") > pw0 * 1.4, "題目區變寬")
+    check(sw() == s0, "答案卡尺寸不變")
+    check(not pg.evaluate("document.documentElement.scrollHeight>innerHeight+1"), "整頁不捲動")
+    pg.click("#zout"); pg.click("#zout"); pg.click("#zout"); check(pg.inner_text("#zval") == "75%", "縮小到 75%")
+    pg.click("#zfit"); check(pg.inner_text("#zval") == "100%", "符合寬度")
     # 返回鍵 + 草稿保留
     pg.goto(B); pg.wait_for_selector("#year option", state="attached")
     pg.select_option("#cls", "4-3"); pg.select_option("#seat", "29"); pg.click("#go")

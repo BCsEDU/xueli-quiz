@@ -37,4 +37,24 @@ th{background:#eef1f8}
 .bar{background:#eee;border-radius:4px;height:14px;min-width:100px}.bar i{display:block;height:100%;border-radius:4px;background:#27ae60}
 .bar.low i{background:#e74c3c}.bar.mid i{background:#f39c12}
 .filters{display:flex;gap:10px;flex-wrap:wrap}.filters select{width:auto}
-@media(max-width:800px){#exam{flex-direction:column-reverse}#sheet{width:100%;position:static;max-height:none}}
+
+/* ===== 測驗畫面：兩欄各自獨立捲動、題目區獨立縮放 ===== */
+html,body{overscroll-behavior:none}
+header{height:52px;padding-top:0;padding-bottom:0}
+#exam{display:flex;gap:12px;padding:10px;height:calc(100vh - 52px);height:calc(100dvh - 52px);align-items:stretch}
+#left{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;gap:6px}
+#zoombar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+#zoombar button{width:auto;min-width:48px;padding:8px 14px;font-size:20px}
+#zoombar #zfit{font-size:15px}
+#zoombar #zval{min-width:52px;text-align:center;font-weight:700}
+#zoombar small{color:#777}
+#pane{flex:1;min-height:0;overflow:auto;background:#d5dbea;border-radius:8px;touch-action:pan-x pan-y;-webkit-overflow-scrolling:touch}
+#pages{width:100%}
+#pages img{margin-bottom:6px;border-radius:0}
+#sheet{width:360px;flex:none;position:static;max-height:none;height:100%;overflow:auto;-webkit-overflow-scrolling:touch}
+@media(max-width:900px){
+  #exam{flex-direction:column}
+  #left{flex:1 1 55%;min-height:0;overflow:hidden}
+  #sheet{width:100%;height:auto;flex:1 1 44%;min-height:0}
+  #zoombar small{display:none}
+}
