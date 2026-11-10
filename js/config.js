@@ -1,9 +1,8 @@
-// 後端設定：留空 = 使用瀏覽器 localStorage（只能單機測試）
-// 要讓全班資料集中到老師後台 → 建 Supabase 專案，跑 supabase.sql，填下面兩個值
+// 後端設定：已連接 Supabase 雲端資料庫（東京機房 ap-northeast-1）
 window.CONFIG = {
-  SUPABASE_URL: "", // 例: https://xxxx.supabase.co
-  SUPABASE_ANON_KEY: "", // anon public key
-  LOCAL_TEACHER_PASSWORD: "1234", // 僅 localStorage 模式使用；Supabase 模式密碼存在資料庫
+  SUPABASE_URL: "https://ppdgubracsneozahujxl.supabase.co",
+  SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBwZGd1YnJhY3NuZW96YWh1anhsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQzMDY2ODAsImV4cCI6MjEwOTg4MjY4MH0.sqLIf_xBLNyJ4zG0twoBfnMkYA8-UE0DvyG-3gXn-RE",
+  LOCAL_TEACHER_PASSWORD: "1234",
   CLASSES: ["4-1", "4-2", "4-3"],
   SEATS: 29,
 };

@@ -15,12 +15,13 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const uuid = () => (crypto.randomUUID ? crypto.randomUUID() : "id-" + Date.now() + "-" + Math.random().toString(36).slice(2));
 
 async function postOnce(s) {
-  const r = await fetch(C.SUPABASE_URL + "/rest/v1/submissions?on_conflict=client_id", {
+  const r = await fetch(C.SUPABASE_URL + "/rest/v1/submissions", {
     method: "POST",
-    headers: { ...hdr(), Prefer: "resolution=ignore-duplicates,return=minimal" },
+    headers: { ...hdr(), Prefer: "return=minimal" },
     body: JSON.stringify(s),
   });
-  if (!r.ok) throw new Error(r.status + " " + (await r.text()));
+  // 409 = 同一筆 client_id 先前已寫入成功（重試時視為成功，避免重複寫入）
+  if (!r.ok && r.status !== 409) throw new Error(r.status + " " + (await r.text()));
 }
 
 // 帶指數退避 + 隨機抖動的重試；client_id 讓重送不會產生重複資料

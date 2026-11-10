@@ -8,7 +8,9 @@ def check(c, m):
     print(("PASS " if c else "FAIL ") + m)
     if not c: fail.append(m)
 with sync_playwright() as p:
-    br = p.chromium.launch(); ctx = br.new_context(viewport={"width": 1300, "height": 900}, accept_downloads=True); pg = ctx.new_page()
+    br = p.chromium.launch(); ctx = br.new_context(viewport={"width": 1300, "height": 900}, accept_downloads=True)
+    ctx.route(B + "js/config.js*", lambda r: r.fulfill(status=200, content_type="text/javascript", body='window.CONFIG={SUPABASE_URL:"",SUPABASE_ANON_KEY:"",LOCAL_TEACHER_PASSWORD:"1234",CLASSES:["4-1","4-2","4-3"],SEATS:29};'))
+    pg = ctx.new_page()
     errs = []; pg.on("pageerror", lambda e: errs.append(str(e))); pg.on("console", lambda m: m.type == "error" and errs.append(m.text))
     pg.goto(B); pg.wait_for_selector("#year option", state="attached")
     check(pg.locator("#cls option").all_inner_texts() == ["4-1", "4-2", "4-3"], "班級選項")
