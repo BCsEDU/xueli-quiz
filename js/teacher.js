@@ -14,7 +14,9 @@ $("ok").onclick = async () => {
     init();
   } catch (e) { $("err").textContent = e.message; }
 };
-$("pw").onkeydown = (e) => e.key === "Enter" && $("ok").click();
+$("pw").onkeydown = (e) => {
+  if (e.key === "Enter") $("ok").click();
+};
 
 function init() {
   $("fExam").innerHTML = '<option value="">全部試卷</option>' + exams.map((e) => `<option value="${e.id}">${e.year}年 ${e.grade}年級${e.subjectName}</option>`).join("");
