@@ -1,4 +1,4 @@
-import { loadExams, teacherFetch, teacherDelete, mode } from "./store.js?v=9";
+import { loadExams, teacherFetch, teacherDelete, mode } from "./store.js?v=10";
 const $ = (id) => document.getElementById(id);
 const C = window.CONFIG;
 let exams = [], rows = [], pw = "";
@@ -20,7 +20,11 @@ function init() {
   $("fExam").innerHTML = '<option value="">全部試卷</option>' + exams.map((e) => `<option value="${e.id}">${e.year}年 ${e.grade}年級${e.subjectName}</option>`).join("");
   $("fCls").innerHTML = '<option value="">全部班級</option>' + C.CLASSES.map((c) => `<option>${c}</option>`).join("");
   $("fExam").onchange = $("fCls").onchange = render;
-  $("reload").onclick = async () => { rows = await teacherFetch(pw); render(); };
+  const refresh = async () => {
+    try { rows = await teacherFetch(pw); render(); $("upd").textContent = "更新於 " + new Date().toLocaleTimeString("zh-TW", { hour12: false }); } catch (e) { $("upd").textContent = "更新失敗，稍後重試"; }
+  };
+  $("reload").onclick = refresh;
+  setInterval(() => { if ($("auto").checked && !document.hidden) refresh(); }, 5000);
   $("csv").onclick = exportCsv;
   render();
 }

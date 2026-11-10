@@ -11,8 +11,11 @@ create table if not exists submissions (
   answers int[] not null,   -- 0 = 未作答
   score int not null,
   total int not null,
+  client_id text unique,   -- 前端產生，重送時不會重複寫入
   created_at timestamptz default now()
 );
+create index if not exists submissions_exam_idx on submissions (exam_id, class);
+-- 已建過表的人補跑：alter table submissions add column if not exists client_id text unique;
 alter table submissions enable row level security;
 -- 學生（anon）只能新增，不能讀
 create policy "anon insert" on submissions for insert to anon with check (true);

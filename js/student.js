@@ -1,9 +1,11 @@
-import { loadExams, saveSubmission, mode } from "./store.js?v=9";
+import { loadExams, saveSubmission, flushPending, mode } from "./store.js?v=10";
 const $ = (id) => document.getElementById(id);
 const C = window.CONFIG;
 const SYM = ["①", "②", "③", "④"];
 let exams = [], exam, ans = [], done = false;
 
+flushPending();
+addEventListener("online", flushPending);
 (async function init() {
   exams = await loadExams();
   $("cls").innerHTML = C.CLASSES.map((c) => `<option>${c}</option>`).join("");
@@ -90,12 +92,9 @@ async function submit() {
   $("submit").classList.add("hidden");
   $("again").classList.remove("hidden");
   $("sheet").scrollTo(0, 0);
-  try {
-    await saveSubmission({ exam_id: exam.id, grade: exam.grade, subject: exam.subject, year: exam.year, class: $("cls").value, seat: +$("seat").value, answers: ans, score, total });
-  } catch (e) {
-    $("result").innerHTML += `<br><b style="color:#e74c3c">⚠ 成績上傳失敗，請告訴老師</b>`;
-    console.error(e);
-  }
+  $("result").insertAdjacentHTML("beforeend", '<br><small id="up">成績上傳中…</small>');
+  const st = await saveSubmission({ exam_id: exam.id, grade: exam.grade, subject: exam.subject, year: exam.year, class: $("cls").value, seat: +$("seat").value, answers: ans, score, total });
+  $("up").innerHTML = st === "ok" ? "✅ 成績已送出給老師" : '<b style="color:#e67e22">⚠ 網路不穩，成績暫存在這台平板，連上網路後會自動補送，請先不要清除瀏覽器資料</b>';
 }
 
 
