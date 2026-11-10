@@ -1,4 +1,4 @@
-import { loadExams, teacherFetch, teacherDelete, mode } from "./store.js?v=5";
+import { loadExams, teacherFetch, teacherDelete, mode } from "./store.js?v=6";
 const $ = (id) => document.getElementById(id);
 const C = window.CONFIG;
 let exams = [], rows = [], pw = "";
@@ -55,8 +55,8 @@ function render() {
   $("ct").innerHTML = "<tr><th>班級</th><th>份數</th><th>平均答對率</th><th></th></tr>" +
     Object.keys(byC).sort().map((c) => { const p = Math.round(byC[c].reduce((s, r) => s + pct(r.score, r.total), 0) / byC[c].length); return `<tr><td>${c}</td><td>${byC[c].length}</td><td>${p}%</td><td style="width:140px">${bar(p)}</td></tr>`; }).join("");
 
-  $("st").innerHTML = "<tr><th>時間</th><th>試卷</th><th>班級</th><th>座號</th><th>姓名</th><th>分數</th><th>答錯題號</th><th></th></tr>" +
-    f.map((r) => { const e = exOf(r.exam_id); return `<tr><td>${new Date(r.created_at).toLocaleString("zh-TW", { hour12: false })}</td><td>${e ? `${e.year}年${e.subjectName}` : r.exam_id}</td><td>${r.class}</td><td>${r.seat}</td><td>${r.name || ""}</td><td>${r.score}/${r.total}（${pct(r.score, r.total)}%）</td><td>${wrongList(r).join("、") || "—"}</td><td><button class="sec" data-del="${r.id}" style="padding:2px 8px">刪</button></td></tr>`; }).join("");
+  $("st").innerHTML = "<tr><th>時間</th><th>試卷</th><th>班級</th><th>座號</th><th>分數</th><th>答錯題號</th><th></th></tr>" +
+    f.map((r) => { const e = exOf(r.exam_id); return `<tr><td>${new Date(r.created_at).toLocaleString("zh-TW", { hour12: false })}</td><td>${e ? `${e.year}年${e.subjectName}` : r.exam_id}</td><td>${r.class}</td><td>${r.seat}</td><td>${r.score}/${r.total}（${pct(r.score, r.total)}%）</td><td>${wrongList(r).join("、") || "—"}</td><td><button class="sec" data-del="${r.id}" style="padding:2px 8px">刪</button></td></tr>`; }).join("");
   $("st").onclick = async (ev) => {
     const id = ev.target.dataset.del;
     if (!id || !confirm("刪除這筆紀錄？")) return;
@@ -67,7 +67,7 @@ function render() {
 
 function exportCsv() {
   const f = filtered();
-  const lines = [["時間", "試卷", "班級", "座號", "姓名", "分數", "總題數", "答錯題號"], ...f.map((r) => [r.created_at, r.exam_id, r.class, r.seat, r.name || "", r.score, r.total, wrongList(r).join(" ")])];
+  const lines = [["時間", "試卷", "班級", "座號", "分數", "總題數", "答錯題號"], ...f.map((r) => [r.created_at, r.exam_id, r.class, r.seat, r.score, r.total, wrongList(r).join(" ")])];
   const blob = new Blob(["\ufeff" + lines.map((l) => l.join(",")).join("\n")], { type: "text/csv" });
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "學力檢測成績.csv"; a.click();
 }

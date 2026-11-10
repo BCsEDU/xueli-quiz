@@ -21,7 +21,7 @@ with sync_playwright() as p:
     for e in exams:
         pg.goto(B); pg.wait_for_selector("#year option", state="attached"); pg.select_option("#subject", e["subject"]); pg.select_option("#year", e["id"])
         cls = ["4-1", "4-2", "4-3"][e["year"] % 3]; seat = e["year"] % 29 + 1
-        pg.select_option("#cls", cls); pg.select_option("#seat", str(seat)); pg.fill("#name", "測試")
+        pg.select_option("#cls", cls); pg.select_option("#seat", str(seat))
         pg.click("#go")
         n = len(e["answers"])
         check(pg.locator("#qs .q").count() == n, f"{e['id']} 題數 {n}")

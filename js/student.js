@@ -1,4 +1,4 @@
-import { loadExams, saveSubmission, mode } from "./store.js?v=5";
+import { loadExams, saveSubmission, mode } from "./store.js?v=6";
 const $ = (id) => document.getElementById(id);
 const C = window.CONFIG;
 const SYM = ["①", "②", "③", "④"];
@@ -43,7 +43,7 @@ function start() {
   $("start").classList.add("hidden");
   $("exam").classList.remove("hidden");
   $("pages").innerHTML = exam.pages.map((p) => `<img loading="lazy" src="${p}">`).join("");
-  $("info").textContent = `${exam.year}年 三年級${exam.subjectName}｜${$("cls").value} ${$("seat").value}號 ${$("name").value}`;
+  $("info").textContent = `${exam.year}年 三年級${exam.subjectName}｜${$("cls").value} ${$("seat").value}號`;
   $("qs").innerHTML = ans.map((_, i) => `<div class="q" data-i="${i}"><b>${i + 1}.</b>${SYM.map((s, k) => `<span class="o" data-k="${k + 1}">${s}</span>`).join("")}<span class="m"></span></div>`).join("");
   document.querySelectorAll(".q").forEach((row, i) => row.querySelectorAll(".o").forEach((o) => o.classList.toggle("sel", +o.dataset.k === ans[i])));
   $("back").onclick = () => { $("exam").classList.add("hidden"); $("start").classList.remove("hidden"); refreshGo(); scrollTo(0, 0); };
@@ -90,7 +90,7 @@ async function submit() {
   $("again").classList.remove("hidden");
   $("sheet").scrollTo(0, 0);
   try {
-    await saveSubmission({ exam_id: exam.id, grade: exam.grade, subject: exam.subject, year: exam.year, class: $("cls").value, seat: +$("seat").value, name: $("name").value.trim() || null, answers: ans, score, total });
+    await saveSubmission({ exam_id: exam.id, grade: exam.grade, subject: exam.subject, year: exam.year, class: $("cls").value, seat: +$("seat").value, answers: ans, score, total });
   } catch (e) {
     $("result").innerHTML += `<br><b style="color:#e74c3c">⚠ 成績上傳失敗，請告訴老師</b>`;
     console.error(e);
