@@ -1,4 +1,4 @@
-import { loadExams, teacherFetch, teacherDelete, mode } from "./store.js?v=4";
+import { loadExams, teacherFetch, teacherDelete, mode } from "./store.js?v=5";
 const $ = (id) => document.getElementById(id);
 const C = window.CONFIG;
 let exams = [], rows = [], pw = "";
