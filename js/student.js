@@ -1,4 +1,4 @@
-import { loadExams, saveSubmission, flushPending, mode } from "./store.js?v=12";
+import { loadExams, saveSubmission, flushPending, mode } from "./store.js?v=13";
 const $ = (id) => document.getElementById(id);
 const C = window.CONFIG;
 const SYM = ["①", "②", "③", "④"];

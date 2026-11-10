@@ -67,3 +67,11 @@ body.exam-mode #exam{height:calc(100% - 52px)}
 #pane{contain:layout paint;overscroll-behavior:contain}
 #sheet{overscroll-behavior:contain;touch-action:pan-y}
 #zoombar,header{touch-action:none}
+
+/* ===== 登入畫面放大（平板好點） ===== */
+#start.card{max-width:760px;padding:36px 40px}
+#start label{font-size:24px;margin:22px 0 10px}
+#start select,#start input{font-size:26px;padding:16px 18px;border-radius:12px;border-width:2px;min-height:62px}
+#start .row{gap:18px}
+#start #go{font-size:28px;padding:20px;margin-top:10px;border-radius:14px;min-height:70px}
+#start #err{font-size:20px}
