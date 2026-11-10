@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>教師後台</title><link rel="stylesheet" href="css/style.css"></head>
+<body>
+<header><h1>👩‍🏫 教師後台</h1><a href="index.html">← 學生測驗</a></header>
+<section id="login" class="card">
+  <label>教師密碼</label><input id="pw" type="password">
+  <p id="err" style="color:#e74c3c"></p><button id="ok">登入</button>
+  <p id="modeNote" style="font-size:13px;color:#888"></p>
+</section>
+<div id="main" class="wrap hidden">
+  <div class="filters">
+    <select id="fExam"></select><select id="fCls"></select>
+    <button class="sec" id="reload" style="width:auto">重新整理</button>
+    <button class="sec" id="csv" style="width:auto">匯出 CSV</button>
+  </div>
+  <div class="stats" id="stats"></div>
+  <h3>各題答對率（由低到高）</h3><table id="qt"></table>
+  <h3>各班平均</h3><table id="ct"></table>
+  <h3>學生成績與錯誤題目</h3><table id="st"></table>
+</div>
+<script src="js/config.js"></script>
+<script type="module" src="js/teacher.js"></script>
+</body></html>

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>學力檢測歷屆試題練習</title><link rel="stylesheet" href="css/style.css"></head>
+<body>
+<header><h1>📝 學力檢測歷屆試題練習</h1><a href="teacher.html">教師後台 →</a></header>
+
+<section id="start" class="card">
+  <label>年級</label>
+  <select id="grade"><option value="3">三年級</option><option value="4" disabled>四年級（即將開放）</option></select>
+  <label>科目</label>
+  <select id="subject"><option value="chinese">國語</option><option value="math">數學</option></select>
+  <label>歷屆年份</label>
+  <select id="year"></select>
+  <div class="row">
+    <div><label>班級</label><select id="cls"></select></div>
+    <div><label>座號</label><select id="seat"></select></div>
+  </div>
+  <label>姓名（選填）</label><input id="name" maxlength="10">
+  <p id="err" style="color:#e74c3c"></p>
+  <button id="go">開始測驗</button>
+</section>
+
+<section id="exam" class="hidden">
+  <div id="pages"></div>
+  <aside id="sheet">
+    <div id="info" style="font-weight:600;margin-bottom:8px"></div>
+    <div id="result" class="hidden"></div>
+    <div id="qs"></div>
+    <button id="submit" style="margin-top:12px">送出答案</button>
+    <button id="again" class="sec hidden" style="margin-top:12px">再測一次</button>
+  </aside>
+</section>
+<script src="js/config.js"></script>
+<script type="module" src="js/student.js"></script>
+</body></html>
