@@ -58,3 +58,12 @@ header{height:52px;padding-top:0;padding-bottom:0}
   #sheet{width:100%;height:auto;flex:1 1 44%;min-height:0}
   #zoombar small{display:none}
 }
+
+/* ===== 鎖定整頁：只有題目框內可縮放、各欄自行捲動 ===== */
+html,body{touch-action:pan-x pan-y;-webkit-text-size-adjust:100%}
+body.exam-mode{position:fixed;inset:0;width:100%;overflow:hidden}
+body.exam-mode #exam{height:calc(100% - 52px)}
+#left{overflow:hidden;contain:layout paint}
+#pane{contain:layout paint;overscroll-behavior:contain}
+#sheet{overscroll-behavior:contain;touch-action:pan-y}
+#zoombar,header{touch-action:none}

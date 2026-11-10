@@ -1,4 +1,4 @@
-import { loadExams, saveSubmission, mode } from "./store.js?v=8";
+import { loadExams, saveSubmission, mode } from "./store.js?v=9";
 const $ = (id) => document.getElementById(id);
 const C = window.CONFIG;
 const SYM = ["①", "②", "③", "④"];
@@ -42,11 +42,12 @@ function start() {
   done = false;
   $("start").classList.add("hidden");
   $("exam").classList.remove("hidden");
+  document.body.classList.add("exam-mode");
   $("pages").innerHTML = exam.pages.map((p) => `<img loading="lazy" src="${p}">`).join("");
   $("info").textContent = `${exam.year}年 三年級${exam.subjectName}｜${$("cls").value} ${$("seat").value}號`;
   $("qs").innerHTML = ans.map((_, i) => `<div class="q" data-i="${i}"><b>${i + 1}.</b>${SYM.map((s, k) => `<span class="o" data-k="${k + 1}">${s}</span>`).join("")}<span class="m"></span></div>`).join("");
   document.querySelectorAll(".q").forEach((row, i) => row.querySelectorAll(".o").forEach((o) => o.classList.toggle("sel", +o.dataset.k === ans[i])));
-  $("back").onclick = () => { $("exam").classList.add("hidden"); $("start").classList.remove("hidden"); refreshGo(); scrollTo(0, 0); };
+  $("back").onclick = () => { $("exam").classList.add("hidden"); document.body.classList.remove("exam-mode"); $("start").classList.remove("hidden"); refreshGo(); scrollTo(0, 0); };
   scrollTo(0, 0);
   $("qs").onclick = (e) => {
     const o = e.target.closest(".o");
@@ -61,7 +62,7 @@ function start() {
   $("again").classList.add("hidden");
   $("result").classList.add("hidden");
   $("submit").onclick = submit;
-  $("again").onclick = () => { $("back").classList.remove("hidden"); $("exam").classList.add("hidden"); $("start").classList.remove("hidden"); scrollTo(0, 0); };
+  $("again").onclick = () => { $("back").classList.remove("hidden"); $("exam").classList.add("hidden"); document.body.classList.remove("exam-mode"); $("start").classList.remove("hidden"); scrollTo(0, 0); };
 }
 
 async function submit() {
@@ -99,10 +100,11 @@ async function submit() {
 
 
 // ---- 題目區獨立縮放（按鈕 + 雙指），不影響右側答案卡 ----
+const MINZ = 1, MAXZ = 3; // 最小＝符合框寬，不能縮得比題目框更小
 const pane = $("pane"), pages = $("pages");
-let zoom = Math.min(3, Math.max(0.5, +localStorage.getItem("xueli_zoom") || 1));
+let zoom = Math.min(MAXZ, Math.max(MINZ, +localStorage.getItem("xueli_zoom") || 1));
 function setZoom(z, cx = pane.clientWidth / 2, cy = pane.clientHeight / 2) {
-  z = Math.min(3, Math.max(0.5, Math.round(z * 100) / 100));
+  z = Math.min(MAXZ, Math.max(MINZ, Math.round(z * 100) / 100));
   const rx = (pane.scrollLeft + cx) / pane.scrollWidth, ry = (pane.scrollTop + cy) / pane.scrollHeight;
   zoom = z;
   pages.style.width = z * 100 + "%";
@@ -126,4 +128,9 @@ pane.addEventListener("touchmove", (e) => {
 }, { passive: false });
 pane.addEventListener("touchend", () => { p0 = 0; });
 // iOS Safari 會無視 user-scalable=no，另外擋整頁縮放手勢
-document.addEventListener("gesturestart", (e) => e.preventDefault());
+["gesturestart", "gesturechange", "gestureend"].forEach((t) => document.addEventListener(t, (e) => e.preventDefault()));
+// 題目框以外的雙指一律擋掉，避免整頁被縮放
+document.addEventListener("touchmove", (e) => { if (e.touches.length > 1 && !pane.contains(e.target)) e.preventDefault(); }, { passive: false });
+// 連點兩下不縮放
+let lastTap = 0;
+document.addEventListener("touchend", (e) => { const n = Date.now(); if (n - lastTap < 350 && !e.target.closest(".o,button,select,input")) e.preventDefault(); lastTap = n; }, { passive: false });

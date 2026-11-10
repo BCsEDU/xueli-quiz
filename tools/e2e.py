@@ -59,7 +59,10 @@ with sync_playwright() as p:
     check(pg.evaluate("document.getElementById('pages').getBoundingClientRect().width") > pw0 * 1.4, "題目區變寬")
     check(sw() == s0, "答案卡尺寸不變")
     check(not pg.evaluate("document.documentElement.scrollHeight>innerHeight+1"), "整頁不捲動")
-    pg.click("#zout"); pg.click("#zout"); pg.click("#zout"); check(pg.inner_text("#zval") == "75%", "縮小到 75%")
+    pg.click("#zout"); pg.click("#zout"); pg.click("#zout"); check(pg.inner_text("#zval") == "100%", "縮小下限鎖在 100%")
+    for _ in range(12): pg.click("#zin")
+    check(pg.inner_text("#zval") == "300%", "放大上限鎖在 300%")
+    check(pg.evaluate("document.body.classList.contains('exam-mode')"), "測驗中鎖定整頁")
     pg.click("#zfit"); check(pg.inner_text("#zval") == "100%", "符合寬度")
     # 返回鍵 + 草稿保留
     pg.goto(B); pg.wait_for_selector("#year option", state="attached")
